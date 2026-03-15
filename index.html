@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SHANKS - المطور الرسمي</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;800;900&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary: #ffd700; /* اللون الذهبي */
+  --secondary: #0f0f0f;
+  --accent: #ff8c00; /* برتقالي ذهبي */
+  --glass: rgba(255, 215, 0, 0.1);
+  --whatsapp: #25D366;
+} 
+
+*{box-sizing:border-box;margin:0;padding:0;}
+
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--secondary);
+  color:#fff;
+  text-align:center;
+  overflow-x:hidden;
+}
+
+/* فيديو خلفية */
+#bg-video{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:brightness(.3) contrast(1.2);
+  z-index:-3;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.6),#000);
+  z-index:-2;
+}
+
+/* canvas نجوم */
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:-1;
+}
+
+/* المحتوى الرئيسي */
+#content{
+  max-width:1000px;
+  margin:auto;
+  padding:100px 20px;
+}
+
+/* صورة البروفايل */
+.profile-pic{
+  width:220px;
+  height:220px;
+  margin:auto;
+  border-radius:50%;
+  padding:10px;
+  background:var(--primary);
+  box-shadow:0 0 40px var(--primary),0 0 80px var(--accent);
+  transition:0.5s;
+}
+
+.profile-pic:hover{
+  transform:scale(1.1);
+  box-shadow:0 0 80px var(--primary),0 0 150px var(--accent);
+}
+
+.profile-pic img{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  object-fit:cover;
+  background:#111;
+}
+
+/* العنوان */
+h1{
+  margin:30px 0 15px;
+  font-size:4.2em;
+  font-weight:900;
+  letter-spacing:4px;
+  color:#fff;
+  font-family: 'Poppins', 'Cairo', sans-serif;
+}
+
+h1 span{
+  background: linear-gradient(45deg, #ffd700, #ff8c00);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 25px rgba(255,215,0,0.5);
+}
+
+/* الوصف */
+.description{
+  font-size:1.3em;
+  color:#ccc;
+  line-height:2;
+  margin-bottom:40px;
+}
+
+.description i {
+  color: var(--primary);
+  margin: 0 5px;
+}
+
+/* زر تشغيل الموسيقى */
+.music-btn{
+  width:80px;
+  height:80px;
+  border-radius:50%;
+  border:2px solid var(--primary);
+  background:transparent;
+  color:var(--primary);
+  font-size:28px;
+  cursor:pointer;
+  margin:30px auto;
+  box-shadow:0 0 40px var(--primary);
+  transition:.3s;
+}
+
+.music-btn:hover{
+  background:var(--primary);
+  color:#000;
+  box-shadow:0 0 70px var(--accent);
+}
+
+/* الأزرار الرئيسية */
+.buttons{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:25px;
+  margin:50px 0;
+}
+
+.btn{
+  padding:18px;
+  border-radius:25px;
+  background:var(--glass);
+  color:#fff;
+  font-weight:800;
+  text-decoration:none;
+  box-shadow:0 0 30px rgba(255,215,0,0.2);
+  transition:.4s;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255,215,0,0.2);
+}
+
+.btn i{
+  margin-left:10px;
+  color:var(--primary);
+}
+
+.btn:hover{
+  background:var(--primary);
+  color:#000;
+  transform:translateY(-8px) scale(1.05);
+  border-color: var(--accent);
+}
+
+.btn:hover i{color:#000}
+
+.btn-whatsapp {
+  background: rgba(37, 211, 102, 0.2);
+  border-color: rgba(37, 211, 102, 0.3);
+}
+
+.btn-whatsapp i {
+  color: #25D366;
+}
+
+.btn-whatsapp:hover {
+  background: #25D366;
+}
+
+.btn-whatsapp:hover i {
+  color: #000;
+}
+
+/* المهارات */
+.skills{
+  margin-top:60px;
+  padding:40px;
+  border-radius:35px;
+  background:var(--glass);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,215,0,0.2);
+}
+
+.skills h2{
+  margin-bottom:30px;
+  font-weight:900;
+  color:var(--primary);
+  font-size: 2.2em;
+}
+
+.skill-container{
+  margin:20px 0;
+}
+
+.skill-container .name{
+  display:block;
+  margin-bottom:8px;
+  color:#fff;
+  font-size: 1.2em;
+}
+
+.skill-bar{
+  height:20px;
+  background:rgba(255,255,255,.1);
+  border-radius:25px;
+  overflow:hidden;
+}
+
+.skill-bar span{
+  display:block;
+  height:100%;
+  width:0;
+  background:linear-gradient(90deg, var(--primary), var(--accent));
+  transition:2s;
+  border-radius: 25px;
+}
+
+/* أزرار القنوات الثابتة */
+.fixed-buttons {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 10;
+}
+
+.fixed-btn {
+  padding: 15px 25px;
+  border-radius: 50px;
+  background: var(--glass);
+  color: #fff;
+  font-weight: 800;
+  text-decoration: none;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,215,0,0.3);
+  transition: .3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1rem;
+}
+
+.fixed-btn i {
+  font-size: 1.3rem;
+}
+
+.fixed-btn:hover {
+  transform: translateX(-10px);
+}
+
+.fixed-btn.channel {
+  background: rgba(255, 215, 0, 0.2);
+  border-color: var(--primary);
+}
+
+.fixed-btn.channel:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+.fixed-btn.group {
+  background: rgba(37, 211, 102, 0.2);
+  border-color: #25D366;
+}
+
+.fixed-btn.group:hover {
+  background: #25D366;
+  color: #000;
+}
+
+.fixed-btn.bot {
+  background: rgba(255, 140, 0, 0.2);
+  border-color: var(--accent);
+}
+
+.fixed-btn.bot:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+/* زر المطور */
+.developer-tag {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #ffd700, #ff8c00);
+  color: #000;
+  font-weight: 900;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  box-shadow: 0 0 30px rgba(255,215,0,0.5);
+  z-index: 10;
+  transition: .3s;
+  font-family: 'Poppins', 'Cairo', sans-serif;
+}
+
+.developer-tag:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 50px rgba(255,215,0,0.8);
+}
+
+.developer-tag i {
+  margin-right: 8px;
+}
+
+/* تذييل البوتات */
+.bots-footer {
+  margin-top: 40px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50px;
+  backdrop-filter: blur(5px);
+}
+
+.bots-footer p {
+  font-size: 1.1rem;
+  color: #ccc;
+}
+
+.bots-footer a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 800;
+  margin: 0 5px;
+}
+
+.bots-footer a:hover {
+  text-decoration: underline;
+}
+
+/* تصميم متجاوب */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.8em;
+  }
+  
+  .fixed-buttons {
+    left: 15px;
+    bottom: 15px;
+  }
+  
+  .developer-tag {
+    right: 15px;
+    bottom: 15px;
+    padding: 8px 15px;
+    font-size: 1rem;
+  }
+  
+  .fixed-btn {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<video id="bg-video" autoplay muted loop playsinline>
+  <source src="https://files.catbox.moe/vtom19.mp4">
+</video>
+
+<canvas id="particles"></canvas>
+
+<audio id="music" src="https://files.catbox.moe/9fyuwb.m4a"></audio>
+
+<div id="content">
+
+  <div class="profile-pic">
+    <img src="main.jpg" alt="SHANKS">
+  </div>
+
+  <h1>SHANKS <span>DEV</span></h1>
+
+  <p class="description">
+    <i class="fas fa-crown"></i> مطور بوتات واتساب محترف <i class="fas fa-crown"></i><br>
+    Full Stack Developer | Bot Engineer | AI Specialist
+  </p>
+
+  <button class="music-btn" id="musicBtn">
+    <i class="fas fa-play"></i>
+  </button>
+
+  <div class="buttons">
+    <a class="btn btn-whatsapp" href="https://wa.me/201097786373?text=BY%20%F0%9D%99%80%F0%9D%99%84%F0%9D%99%96%F0%9D%99%8B-%F0%9D%99%80%F0%9D%99%AE%F0%9D%99%84%F0%9D%99%80" target="_blank"><i class="fab fa-whatsapp"></i> راسل البوت</a>
+    <a class="btn" href="https://t.me/x7arb" target="_blank"><i class="fab fa-telegram"></i> تيليجرام</a>
+  </div>
+
+  <div class="skills">
+    <h2>مهاراتي الاحترافية</h2>
+
+    <div class="skill-container">
+      <span class="name">JavaScript / Node.js</span>
+      <div class="skill-bar"><span data-width="90%"></span></div>
+    </div>
+
+    <div class="skill-container">
+      <span class="name">Python / AI</span>
+      <div class="skill-bar"><span data-width="80%"></span></div>
+    </div>
+
+    <div class="skill-container">
+      <span class="name">HTML / CSS</span>
+      <div class="skill-bar"><span data-width="95%"></span></div>
+    </div>
+    
+    <div class="skill-container">
+      <span class="name">Bot Development</span>
+      <div class="skill-bar"><span data-width="100%"></span></div>
+    </div>
+  </div>
+  
+  <div class="bots-footer">
+    <p>🤖 بوتات شانكس المميزة: 
+      <a href="https://wa.me/201097786373?text=BY%20%F0%9D%99%80%F0%9D%99%84%F0%9D%99%96%F0%9D%99%8B-%F0%9D%99%80%F0%9D%99%AE%F0%9D%99%84%F0%9D%99%80" target="_blank">MUKO</a> • 
+      <a href="https://wa.me/201097786373?text=%D8%A8%D9%88%D8%AA%20%D8%A7%D9%84%D8%AA%D8%AD%D9%85%D9%8A%D9%84" target="_blank">Downloader</a> • 
+      <a href="https://wa.me/201097786373?text=%D8%A8%D9%88%D8%AA%20%D8%A7%D9%84%D8%A3%D9%84%D8%B9%D8%A7%D8%A8" target="_blank">Games</a>
+    </p>
+  </div>
+
+</div>
+
+<!-- الأزرار الثابتة للقنوات -->
+<div class="fixed-buttons">
+  <a href="https://whatsapp.com/channel/0029VbC5LLx6GcGDXZUmHP0y" class="fixed-btn channel" target="_blank">
+    <i class="fab fa-whatsapp"></i> القناة الرسمية
+  </a>
+  <a href="https://chat.whatsapp.com/L5tsWhO2ks0BqGemttR9Ad?mode=hqctcla" class="fixed-btn group" target="_blank">
+    <i class="fab fa-whatsapp"></i> مجموعة النقاش
+  </a>
+  <a href="https://wa.me/201097786373?text=BY%20%F0%9D%99%80%F0%9D%99%84%F0%9D%99%96%F0%9D%99%8B-%F0%9D%99%80%F0%9D%99%AE%F0%9D%99%84%F0%9D%99%80" class="fixed-btn bot" target="_blank">
+    <i class="fas fa-robot"></i> بوت MUKO
+  </a>
+</div>
+
+<!-- تاغ المطور Shanks -->
+<a href="https://wa.me/201097786373" class="developer-tag" target="_blank">
+  <i class="fas fa-bolt"></i> SHANKS
+</a>
+
+<script>
+/* موسيقى */
+const music=document.getElementById("music");
+const btn=document.getElementById("musicBtn");
+const icon=btn.querySelector("i");
+btn.onclick=()=>{
+  if(music.paused){
+    music.play();
+    icon.className="fas fa-pause";
+  }else{
+    music.pause();
+    icon.className="fas fa-play";
+  }
+};
+
+/* particles */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let particles=[];
+function resize(){canvas.width=innerWidth;canvas.height=innerHeight;}
+resize();addEventListener("resize",resize);
+
+for(let i=0;i<180;i++){
+  particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2,s:Math.random()*0.8});
+}
+
+(function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle="rgba(255,215,0,0.8)"; // تغيير لون النجوم للذهبي
+    ctx.fill();
+    p.y+=p.s;
+    if(p.y>canvas.height){p.y=0;p.x=Math.random()*canvas.width;}
+  });
+  requestAnimationFrame(animate);
+})();
+
+/* المهارات */
+document.querySelectorAll(".skill-bar span").forEach(e=>setTimeout(()=>e.style.width=e.dataset.width,500));
+</script>
+
+</body>
+</html>
